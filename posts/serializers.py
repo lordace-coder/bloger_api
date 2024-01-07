@@ -138,6 +138,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     comment = CommentSerializer(read_only = True,many=True)
     author = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    profile_image = serializers.SerializerMethodField()
     verified = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     date = serializers.SerializerMethodField()
@@ -171,7 +172,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
             'disliked',
             'liked',
             'post_detail_url',
-            'slug'
+            'slug',
+            'profile_image',
         ]
     def get_likes_count(self,obj):
         return obj.likes.count()
@@ -229,7 +231,16 @@ class PostDetailSerializer(serializers.ModelSerializer):
         qs = obj.category.first()
         return f"{qs}"
 
+    def get_profile_image(self,obj):
+        profile = UserProfile.objects.get(user__username=self.get_author(obj))
+        image = None
+        if profile.image:
+            image = profile.image.url
+            image = str(image).replace('http','https')
 
+        return image
+    
+    
 
 class CarouselSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
@@ -245,6 +256,9 @@ class CarouselSerializer(serializers.ModelSerializer):
             image = obj.image.url
             image = str(image).replace('http','https')
         return image
+    
+    
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
