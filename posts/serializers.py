@@ -27,6 +27,7 @@ class PostListSerializers(serializers.ModelSerializer):
     verified = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    profile_image = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     post_detail_url = serializers.HyperlinkedIdentityField(view_name='post_detail',lookup_field='slug')
     likes_count = serializers.SerializerMethodField()
@@ -57,12 +58,23 @@ class PostListSerializers(serializers.ModelSerializer):
             'liked',
             'disliked',
             'owns_profile',
+            "profile_image",
         ]
 
     def get_image(self,obj):
         image = None
         if obj.image:
             image = obj.image.url
+            image = str(image).replace('http','https')
+
+        return image
+
+
+    def get_profile_image(self,obj):
+        profile = UserProfile.objects.get(user__username=self.get_author(obj))
+        image = None
+        if profile.image:
+            image = profile.image.url
             image = str(image).replace('http','https')
 
         return image
