@@ -18,7 +18,7 @@ from notifications_and_messages.models import (FlagedUsers, Notifications,
                                                Reports)
 from users.models import UserProfile
 
-from .mixins import UserEditOnly
+from .mixins import UserEditOnly,StaffEditOnly
 from .models import Carousel, Categories, Comments, Post, ViewPost
 from .pagination import StandardResultsSetPagination
 from .serializers import (CarouselSerializer, CategorySerializer,
@@ -53,7 +53,7 @@ class PostsApiView(generics.ListAPIView):
         return super().get_queryset().order_by('-date_created').order_by('views').order_by('verified')
 
 
-class CreatePostView( UserEditOnly,generics.CreateAPIView):
+class CreatePostView( StaffEditOnly,generics.CreateAPIView):
     serializer_class = PostCreateSerializer
     queryset = Post.objects.all()
 
@@ -69,14 +69,13 @@ class CreatePostView( UserEditOnly,generics.CreateAPIView):
         category = request.data.get('category')
         user = request.user
         if FlagedUsers.is_flagged(user) and FlagedUsers.objects.get(user=user).is_active:
-            
             return Response(status=400,data='user doesnt have posting priviledges')
         # for rest framework view
         if not category:
             category = request.data.get('category.category')
         image = request.data.get('image')
         if not category:
-            qs = Categories.objects.get(category="+18")
+            qs = Categories.objects.all()[0]
         else:
             qs = Categories.objects.get(category=category)
         category_data = CategorySerializer(qs,many=False)
@@ -133,7 +132,7 @@ class PostDetailApiView(generics.RetrieveAPIView):
 
 
 
-class EditDeletePostView(UserEditOnly,generics.RetrieveUpdateDestroyAPIView):
+class EditDeletePostView(StaffEditOnly,generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
     lookup_field = 'slug'

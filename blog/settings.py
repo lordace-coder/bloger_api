@@ -152,8 +152,7 @@ REST_FRAMEWORK = {
 }
 CORS_ALLOWED_ORIGINS = [
     "https://blorger.netlify.app",
-    "http://localhost:8000",
-    "http://localhost:5173"
+    "http://localhost:3000",
 ]
 # CORS_ALLOW_ALL_ORIGINS= True
 SIMPLE_JWT = {
