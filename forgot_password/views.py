@@ -14,7 +14,6 @@ class GenerateTokenApiView(APIView):
     permission_classes = [AllowAny]
     
     def get(self,*args, **kwargs):
-
             Token.clear_expired_tokens()
             try:
                 user = UserModel.objects.get(email=self.kwargs.get('email'))
