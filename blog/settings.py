@@ -125,7 +125,7 @@ config(
   cloud_name = "dinoc8svf",
   api_key = "524857684224764",
   api_secret = "GmlN577TzHP5YShkZFL2gBCw8V8",
-  api_proxy = "http://proxy.server:3128"
+#   api_proxy = "http://proxy.server:3128"
 )
 
 import cloudinary.api

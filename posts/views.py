@@ -33,6 +33,11 @@ def index(request):
     data = CategorySerializer(categories,many = True)
     return Response(data.data)
 
+
+@api_view(['GET'])
+def getAppVersion(request):
+    return Response(data={'version':1.0,'update_url':'https://lordacemedia.netlify.app'})
+
 @api_view(['GET'])
 def carousels(request):
     qs = Carousel.objects.all()

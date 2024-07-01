@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index),
+    path('version', views.getAppVersion),
     path('download-app',views.download_app),
     path('contact-staff', views.contact_user),
     path('slider', views.carousels),
